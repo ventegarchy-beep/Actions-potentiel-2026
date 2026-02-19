@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunités Haute Conviction - 2026-02-19</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --bg-color: #0b0e11;
+            --card-bg: #151a21;
+            --modal-bg: #0b0e11;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --accent-color: #3b82f6;
+            /* Blue */
+            --success-color: #10b981;
+            /* Green */
+            --danger-color: #ef4444;
+            /* Red */
+            --border-color: #2a303c;
+            --border-width: 2.5px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 40px 20px;
+            font-size: 22px;
+            /* INCREASED BASE */
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1600px;
+            /* Wider for better layout */
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* SPA PAGES */
+        #dashboard-page {
+            display: block;
+        }
+
+        #details-page {
+            display: none;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .back-btn {
+            background: #1e293b;
+            border: 2px solid var(--border-color);
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.5em;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-bottom: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #334155;
+            transform: translateX(-5px);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            /* REDUCED */
+        }
+
+        h1 {
+            font-size: 3em;
+            /* REDUCED from 4em */
+            font-weight: 800;
+            line-height: 1.2;
+            /* BETTER SPACING */
+            background: linear-gradient(to right, #ffffff, #9ca3af);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+            line-height: 1.4;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            /* Larger minimum width */
+            gap: 35px;
+            margin-bottom: 60px;
+        }
+
+        /* Card */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 35px;
+            /* More padding */
+            border: 2px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            border-color: var(--accent-color);
+        }
+
+        .card h3 {
+            margin: 0;
+            font-size: 2.2em;
+            /* DRASTICALLY BIGGER */
+            font-weight: 800;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .ticker {
+            font-size: 1.2em;
+            font-weight: 900;
+        }
+
+        .company-name {
+            font-size: 0.55em;
+            color: var(--text-secondary);
+            font-weight: 600;
+            display: block;
+            margin-top: 6px;
+        }
+
+        .price-box {
+            text-align: right;
+        }
+
+        .price {
+            font-size: 2em;
+            /* DRASTICALLY BIGGER */
+            font-weight: 800;
+            color: white;
+            display: block;
+        }
+
+        .variation {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        .variation.up {
+            color: var(--success-color);
+        }
+
+        .variation.down {
+            color: var(--danger-color);
+        }
+
+        .metric-label {
+            font-size: 1.1em;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .metric-value {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* Details View Specifics */
+        .details-container {
+            display: grid;
+            grid-template-columns: 60fr 40fr;
+            gap: 50px;
+            grid-template-areas: "chart infos";
+            margin-top: 20px;
+        }
+
+        .details-header {
+            border-bottom: 3px solid var(--border-color);
+            padding-bottom: 30px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .details-title h2 {
+            font-size: 3.5em;
+            /* REDUCED from 5em */
+            font-weight: 800;
+            line-height: 1.1;
+            margin: 0;
+        }
+
+        .details-ticker {
+            font-size: 1.6em;
+            /* REDUCED from 2em */
+            color: var(--accent-color);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .info-col h3 {
+            font-size: 1.8em;
+            /* REDUCED from 2.5em */
+            font-weight: 800;
+            color: white;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .info-col p {
+            font-size: 1.2em;
+            /* REDUCED from 1.3em */
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .strategy-box {
+            background: #10141b;
+            border: 3px solid #232936;
+            border-radius: 20px;
+            padding: 30px;
+            /* REDUCED */
+        }
+
+        .strat-row {
+            font-size: 1.2em;
+            /* REDUCED */
+            margin-bottom: 15px;
+        }
+
+        /* Fibonacci Ladder Styling */
+        .fib-ladder {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            /* REDUCED */
+            margin: 30px 0;
+        }
+
+        .fib-level {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px;
+            /* REDUCED */
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            font-size: 1.2em;
+            /* REDUCED from 1.4em */
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .fib-level.resistance {
+            border-left: 6px solid var(--danger-color);
+            color: #fca5a5;
+        }
+
+        .fib-level.support {
+            border-left: 6px solid var(--success-color);
+            color: #6ee7b7;
+        }
+
+        .fib-level.current-price {
+            background: var(--accent-color);
+            color: white;
+            font-size: 1.3em;
+            /* REDUCED from 1.6em */
+            font-weight: 800;
+            margin: 10px 0;
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Custom Input & Footer */
+        .landscape-section {
+            margin-top: 100px;
+            padding: 50px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 3px solid var(--border-color);
+        }
+
+
+        .strat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #232936;
+            color: var(--text-secondary);
+            font-size: 0.95em;
+        }
+
+        .strat-row:last-child {
+            border-bottom: none;
+        }
+
+        .strat-val {
+            color: white;
+            font-weight: 600;
+        }
+
+        .strat-val.green {
+            color: var(--success-color);
+        }
+
+        .strat-val.blue {
+            color: var(--accent-color);
+        }
+
+        /* Blue for entry */
+        .strat-val.red {
+            color: var(--danger-color);
+        }
+
+        /* Fallback msg */
+        .fallback-msg {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Custom Input */
+        .input-section {
+            margin-top: 60px;
+            text-align: center;
+            padding: 40px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .input-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .ticker-input {
+            background: #0b0e11;
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            width: 100px;
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .cmd-box {
+            background: black;
+            padding: 15px;
+            border-radius: 8px;
+            display: inline-block;
+            font-family: monospace;
+            color: var(--success-color);
+            position: relative;
+            padding-right: 80px;
+        }
+
+        .copy-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #2a303c;
+            border: none;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Visual Summary Bars */
+        .conviction-summary {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .conviction-bar {
+            height: 4px;
+            flex: 1;
+            background: #2a303c;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .conviction-fill {
+            height: 100%;
+            background: #fbbf24;
+            transition: width 0.3s ease;
+        }
+
+        .conviction-fill.tech {
+            background: #3b82f6;
+        }
+
+        .conviction-fill.fund {
+            background: #10b981;
+        }
+
+        .conviction-fill.fin {
+            background: #f59e0b;
+        }
+
+        .conviction-fill.news {
+            background: #a855f7;
+        }
+
+        .conviction-fill.social {
+            background: #ec4899;
+        }
+
+        /* Star Breakdown Table */
+        .stars-table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+
+        .stars-table td {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stars-label {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stars-val {
+            text-align: right;
+            color: #fbbf24;
+        }
+
+        /* Section Récapitulatif en mode paysage à l'écran */
+        .landscape-section {
+            margin-top: 60px;
+            padding: 30px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 2px solid var(--border-color);
+            overflow-x: auto;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .landscape-section .summary-table {
+            min-width: 1000px;
+            width: 100%;
+        }
+
+        /* Landscape Print Style */
+        @media print {
+            body {
+                background: white;
+                color: black;
+                padding: 0;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .container {
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0;
+                padding: 10px;
+            }
+
+            /* Page 1: Grille compacte 3x2 - Utilise toute la page */
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+                min-height: 90vh;
+                /* Force l'utilisation de la hauteur de page */
+                align-content: center;
+                page-break-after: always;
+                /* Force nouvelle page après la grille */
+            }
+
+            .card {
+                padding: 10px;
+                border: 1px solid #333;
+                page-break-inside: avoid;
+            }
+
+            .mini-chart {
+                height: 40px;
+            }
+
+            .input-section,
+            .modal-overlay,
+            .close-btn {
+                display: none !important;
+            }
+
+            /* Page 2: Paysage */
+            .landscape-section {
+                page-break-before: always;
+                width: 100%;
+            }
+
+            @page {
+                size: A4 portrait;
+                margin: 1cm;
+            }
+
+            @page landscape-layout {
+                size: A4 landscape;
+                margin: 0.5cm;
+            }
+
+            .landscape-page {
+                page: landscape-layout;
+            }
+
+            .summary-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+                color: black;
+            }
+
+            .summary-table th,
+            .summary-table td {
+                border: 1px solid #333;
+                padding: 10px;
+                text-align: left;
+                font-size: 10pt;
+            }
+
+            .summary-table th {
+                background-color: #e0e0e0 !important;
+                font-weight: 700;
+            }
+        }
+    </style>
+    <style media="print">
+        @page {
+            size: landscape;
+            margin: 0.5cm;
+        }
+
+        body {
+            background-color: white !important;
+            color: black !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .container {
+            width: 100% !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .grid {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 15px !important;
+            height: 95vh !important;
+            /* Force la hauteur page 1 */
+            page-break-after: always !important;
+            margin-bottom: 0 !important;
+        }
+
+        .card {
+            height: auto !important;
+            break-inside: avoid !important;
+            border: 1px solid #ccc !important;
+        }
+
+        /* Masquer les éléments inutiles à l'impression */
+        .input-section,
+        .modal-overlay,
+        header {
+            display: none !important;
+        }
+
+        /* Page 2 Paysage */
+        .landscape-section {
+            display: block !important;
+            width: 100% !important;
+            page-break-before: always !important;
+            overflow: visible !important;
+        }
+
+        .summary-table {
+            width: 100% !important;
+            font-size: 10pt !important;
+        }
+
+        .summary-table th,
+        .summary-table td {
+            color: black !important;
+            border: 1px solid #000 !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="dashboard-page">
+        <div class="container">
+            <header>
+                <h1>MARKET SCREENER</h1>
+                <p class="subtitle">Analyse quotidienne & Opportunités - 2026-02-19 | <span
+                        style="color: var(--accent-color);">Actualisé à 17:45</span></p>
+            </header>
+
+            <div class="landscape-section" style="margin-top: 0; margin-bottom: 60px;">
+                <h2 style="margin-bottom: 30px; text-align: center; font-size: 2.2em;">📋 Récapitulatif Hebdomadaire
+                </h2>
+                <table class="summary-table">
+                    <thead>
+                        <tr>
+                            <th>Ticker</th>
+                            <th>Secteur</th>
+                            <th>Prix</th>
+                            <th>Consensus</th>
+                            <th>TP Objectif</th>
+                            <th>Potentiel</th>
+                            <th>Conviction</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td style="font-weight: 700; font-size: 1.3em;">VU.PA</td>
+                            <td style="font-size: 1.1em;">Technology</td>
+                            <td style="font-weight: 700; font-size: 1.1em;">118.30€</td>
+                            <td style="font-size: 1em; font-weight: 600; color: var(--text-secondary);">Strong
+                                Buy</td>
+                            <td style="color: var(--success-color); font-weight: 800; font-size: 1.3em;">383.43€</td>
+                            <td style="color: var(--success-color); font-weight: 800; font-size: 1.2em;">+224.1%</td>
+                            <td style="font-size: 1.3em;">⭐⭐</td>
+                        </tr>
+                        
+                        <tr>
+                            <td style="font-weight: 700; font-size: 1.3em;">ZS</td>
+                            <td style="font-size: 1.1em;">Technology</td>
+                            <td style="font-weight: 700; font-size: 1.1em;">170.18$</td>
+                            <td style="font-size: 1em; font-weight: 600; color: var(--text-secondary);">Buy</td>
+                            <td style="color: var(--success-color); font-weight: 800; font-size: 1.3em;">500.40$</td>
+                            <td style="color: var(--success-color); font-weight: 800; font-size: 1.2em;">+194.0%</td>
+                            <td style="font-size: 1.3em;">⭐⭐</td>
+                        </tr>
+                        
+                        <tr>
+                            <td style="font-weight: 700; font-size: 1.3em;">ALMDT.PA</td>
+                            <td style="font-size: 1.1em;">Healthcare</td>
+                            <td style="font-weight: 700; font-size: 1.1em;">4.99€</td>
+                            <td style="font-size: 1em; font-weight: 600; color: var(--text-secondary);">Strong
+                                Buy</td>
+                            <td style="color: var(--success-color); font-weight: 800; font-size: 1.3em;">14.43€</td>
+                            <td style="color: var(--success-color); font-weight: 800; font-size: 1.2em;">+189.2%</td>
+                            <td style="font-size: 1.3em;">⭐⭐</td>
+                        </tr>
+                        
+                        <tr>
+                            <td style="font-weight: 700; font-size: 1.3em;">SNOW</td>
+                            <td style="font-size: 1.1em;">Technology</td>
+                            <td style="font-weight: 700; font-size: 1.1em;">176.77$</td>
+                            <td style="font-size: 1em; font-weight: 600; color: var(--text-secondary);">Buy</td>
+                            <td style="color: var(--success-color); font-weight: 800; font-size: 1.3em;">449.64$</td>
+                            <td style="color: var(--success-color); font-weight: 800; font-size: 1.2em;">+154.4%</td>
+                            <td style="font-size: 1.3em;">⭐⭐⭐</td>
+                        </tr>
+                        
+                        <tr>
+                            <td style="font-weight: 700; font-size: 1.3em;">WKL.AS</td>
+                            <td style="font-size: 1.1em;">Industrials</td>
+                            <td style="font-weight: 700; font-size: 1.1em;">62.02€</td>
+                            <td style="font-size: 1em; font-weight: 600; color: var(--text-secondary);">Buy</td>
+                            <td style="color: var(--success-color); font-weight: 800; font-size: 1.3em;">146.22€</td>
+                            <td style="color: var(--success-color); font-weight: 800; font-size: 1.2em;">+135.8%</td>
+                            <td style="font-size: 1.3em;">⭐⭐</td>
+                        </tr>
+                        
+                        <tr>
+                            <td style="font-weight: 700; font-size: 1.3em;">DBV.PA</td>
+                            <td style="font-size: 1.1em;">Healthcare</td>
+                            <td style="font-weight: 700; font-size: 1.1em;">3.56€</td>
+                            <td style="font-size: 1em; font-weight: 600; color: var(--text-secondary);">Buy</td>
+                            <td style="color: var(--success-color); font-weight: 800; font-size: 1.3em;">8.18€</td>
+                            <td style="color: var(--success-color); font-weight: 800; font-size: 1.2em;">+129.8%</td>
+                            <td style="font-size: 1.3em;">⭐⭐</td>
+                        </tr>
+                        
+                        <tr>
+                            <td style="font-weight: 700; font-size: 1.3em;">NFLX</td>
+                            <td style="font-size: 1.1em;">Communication Services</td>
+                            <td style="font-weight: 700; font-size: 1.1em;">78.05$</td>
+                            <td style="font-size: 1em; font-weight: 600; color: var(--text-secondary);">Buy</td>
+                            <td style="color: var(--success-color); font-weight: 800; font-size: 1.3em;">165.55$</td>
+                            <td style="color: var(--success-color); font-weight: 800; font-size: 1.2em;">+112.1%</td>
+                            <td style="font-size: 1.3em;">⭐⭐</td>
+                        </tr>
+                        
+                        <tr>
+                            <td style="font-weight: 700; font-size: 1.3em;">BKNG</td>
+                            <td style="font-size: 1.1em;">Consumer Cyclical</td>
+                            <td style="font-weight: 700; font-size: 1.1em;">3976.65$</td>
+                            <td style="font-size: 1em; font-weight: 600; color: var(--text-secondary);">Buy</td>
+                            <td style="color: var(--success-color); font-weight: 800; font-size: 1.3em;">8169.40$</td>
+                            <td style="color: var(--success-color); font-weight: 800; font-size: 1.2em;">+105.4%</td>
+                            <td style="font-size: 1.3em;">⭐⭐</td>
+                        </tr>
+                        
+                        <tr>
+                            <td style="font-weight: 700; font-size: 1.3em;">AL2SI.PA</td>
+                            <td style="font-size: 1.1em;">Technology</td>
+                            <td style="font-weight: 700; font-size: 1.1em;">21.70€</td>
+                            <td style="font-size: 1em; font-weight: 600; color: var(--text-secondary);">Strong
+                                Buy</td>
+                            <td style="color: var(--success-color); font-weight: 800; font-size: 1.3em;">41.52€</td>
+                            <td style="color: var(--success-color); font-weight: 800; font-size: 1.2em;">+91.3%</td>
+                            <td style="font-size: 1.3em;">⭐⭐</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+
+            
+
+        <div
+            style="text-align: center; margin-bottom: 40px; color: var(--text-secondary); font-size: 1.1em; line-height: 1.4;">
+            <span style="margin-right: 20px;">💡 Légende Conviction:</span>
+            <span style="color: #fbbf24; margin-right: 15px;">⭐⭐⭐⭐ = Forte (4/4 critères)</span>
+            <span style="color: #fbbf24; opacity: 0.8;">⭐⭐⭐ = Moyenne (3/4 critères)</span>
+        </div>
+
+        <div class="grid">
+            
+            <div class="card" onclick="openDetails('VU.PA')">
+                <div class="card-header">
+                    <div>
+                        <div class="ticker">VU.PA <span
+                                style="font-size: 0.8em; color: #fbbf24; margin-left: 10px;">⭐⭐</span></div>
+                        <div class="company-name">Vusion S.A.</div>
+                        <div style="font-size: 1em; color: var(--text-secondary); margin-top: 8px;">Score: 19.74 | Technology</div>
+                    </div>
+                    <div style="font-size: 1em; color: #fbbf24; font-weight: 700; margin-top: 5px;">
+                        2.35 / 4
+                    </div>
+                </div>
+                <div style="text-align: right; margin-bottom: 30px;">
+                    <div class="price">118.30€</div>
+                    <div class="variation up">
+                        +2.60%
+                    </div>
+                </div>
+
+                <!-- Visual Summary Bars (Larger) -->
+                <div class="conviction-summary" style="height: 10px; display: flex; gap: 4px;">
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #60a5fa; width: 25%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #10b981; width: 75%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #f59e0b; width: 75%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #a855f7; width: 100%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #ec4899; width: 25%">
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    style="display: flex; justify-content: space-between; font-size: 1.1em; color: var(--text-secondary); margin-top: auto; padding-top: 20px; border-top: 2px solid rgba(255,255,255,0.05);">
+                    <span>TP: <span style="color: var(--success-color); font-weight: 800; font-size: 1.5em;">383.43€</span></span>
+                    <span>Stop: <span style="color: #ef4444; font-weight: 700; font-size: 1.3em;">108.84€</span></span>
+                </div>
+            </div>
+            
+            <div class="card" onclick="openDetails('ZS')">
+                <div class="card-header">
+                    <div>
+                        <div class="ticker">ZS <span
+                                style="font-size: 0.8em; color: #fbbf24; margin-left: 10px;">⭐⭐</span></div>
+                        <div class="company-name">Zscaler, Inc.</div>
+                        <div style="font-size: 1em; color: var(--text-secondary); margin-top: 8px;">Score: 17.47 | Technology</div>
+                    </div>
+                    <div style="font-size: 1em; color: #fbbf24; font-weight: 700; margin-top: 5px;">
+                        2.4 / 4
+                    </div>
+                </div>
+                <div style="text-align: right; margin-bottom: 30px;">
+                    <div class="price">170.18$</div>
+                    <div class="variation down">
+                        -1.13%
+                    </div>
+                </div>
+
+                <!-- Visual Summary Bars (Larger) -->
+                <div class="conviction-summary" style="height: 10px; display: flex; gap: 4px;">
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #60a5fa; width: 25%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #10b981; width: 100%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #f59e0b; width: 50%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #a855f7; width: 100%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #ec4899; width: 25%">
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    style="display: flex; justify-content: space-between; font-size: 1.1em; color: var(--text-secondary); margin-top: auto; padding-top: 20px; border-top: 2px solid rgba(255,255,255,0.05);">
+                    <span>TP: <span style="color: var(--success-color); font-weight: 800; font-size: 1.5em;">500.40$</span></span>
+                    <span>Stop: <span style="color: #ef4444; font-weight: 700; font-size: 1.3em;">156.57$</span></span>
+                </div>
+            </div>
+            
+            <div class="card" onclick="openDetails('ALMDT.PA')">
+                <div class="card-header">
+                    <div>
+                        <div class="ticker">ALMDT.PA <span
+                                style="font-size: 0.8em; color: #fbbf24; margin-left: 10px;">⭐⭐</span></div>
+                        <div class="company-name">Median Technologies SA</div>
+                        <div style="font-size: 1em; color: var(--text-secondary); margin-top: 8px;">Score: 15.15 | Healthcare</div>
+                    </div>
+                    <div style="font-size: 1em; color: #fbbf24; font-weight: 700; margin-top: 5px;">
+                        2.2 / 4
+                    </div>
+                </div>
+                <div style="text-align: right; margin-bottom: 30px;">
+                    <div class="price">4.99€</div>
+                    <div class="variation up">
+                        +7.54%
+                    </div>
+                </div>
+
+                <!-- Visual Summary Bars (Larger) -->
+                <div class="conviction-summary" style="height: 10px; display: flex; gap: 4px;">
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #60a5fa; width: 50%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #10b981; width: 50%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #f59e0b; width: 25%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #a855f7; width: 100%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #ec4899; width: 75%">
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    style="display: flex; justify-content: space-between; font-size: 1.1em; color: var(--text-secondary); margin-top: auto; padding-top: 20px; border-top: 2px solid rgba(255,255,255,0.05);">
+                    <span>TP: <span style="color: var(--success-color); font-weight: 800; font-size: 1.5em;">14.43€</span></span>
+                    <span>Stop: <span style="color: #ef4444; font-weight: 700; font-size: 1.3em;">4.45€</span></span>
+                </div>
+            </div>
+            
+            <div class="card" onclick="openDetails('SNOW')">
+                <div class="card-header">
+                    <div>
+                        <div class="ticker">SNOW <span
+                                style="font-size: 0.8em; color: #fbbf24; margin-left: 10px;">⭐⭐⭐</span></div>
+                        <div class="company-name">Snowflake Inc.</div>
+                        <div style="font-size: 1em; color: var(--text-secondary); margin-top: 8px;">Score: 14.38 | Technology</div>
+                    </div>
+                    <div style="font-size: 1em; color: #fbbf24; font-weight: 700; margin-top: 5px;">
+                        2.5 / 4
+                    </div>
+                </div>
+                <div style="text-align: right; margin-bottom: 30px;">
+                    <div class="price">176.77$</div>
+                    <div class="variation up">
+                        +0.39%
+                    </div>
+                </div>
+
+                <!-- Visual Summary Bars (Larger) -->
+                <div class="conviction-summary" style="height: 10px; display: flex; gap: 4px;">
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #60a5fa; width: 25%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #10b981; width: 100%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #f59e0b; width: 50%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #a855f7; width: 100%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #ec4899; width: 50%">
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    style="display: flex; justify-content: space-between; font-size: 1.1em; color: var(--text-secondary); margin-top: auto; padding-top: 20px; border-top: 2px solid rgba(255,255,255,0.05);">
+                    <span>TP: <span style="color: var(--success-color); font-weight: 800; font-size: 1.5em;">449.64$</span></span>
+                    <span>Stop: <span style="color: #ef4444; font-weight: 700; font-size: 1.3em;">162.63$</span></span>
+                </div>
+            </div>
+            
+            <div class="card" onclick="openDetails('WKL.AS')">
+                <div class="card-header">
+                    <div>
+                        <div class="ticker">WKL.AS <span
+                                style="font-size: 0.8em; color: #fbbf24; margin-left: 10px;">⭐⭐</span></div>
+                        <div class="company-name">Wolters Kluwer N.V.</div>
+                        <div style="font-size: 1em; color: var(--text-secondary); margin-top: 8px;">Score: 12.42 | Industrials</div>
+                    </div>
+                    <div style="font-size: 1em; color: #fbbf24; font-weight: 700; margin-top: 5px;">
+                        1.95 / 4
+                    </div>
+                </div>
+                <div style="text-align: right; margin-bottom: 30px;">
+                    <div class="price">62.02€</div>
+                    <div class="variation up">
+                        +0.45%
+                    </div>
+                </div>
+
+                <!-- Visual Summary Bars (Larger) -->
+                <div class="conviction-summary" style="height: 10px; display: flex; gap: 4px;">
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #60a5fa; width: 25%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #10b981; width: 75%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #f59e0b; width: 25%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #a855f7; width: 100%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #ec4899; width: 25%">
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    style="display: flex; justify-content: space-between; font-size: 1.1em; color: var(--text-secondary); margin-top: auto; padding-top: 20px; border-top: 2px solid rgba(255,255,255,0.05);">
+                    <span>TP: <span style="color: var(--success-color); font-weight: 800; font-size: 1.5em;">146.22€</span></span>
+                    <span>Stop: <span style="color: #ef4444; font-weight: 700; font-size: 1.3em;">57.06€</span></span>
+                </div>
+            </div>
+            
+            <div class="card" onclick="openDetails('DBV.PA')">
+                <div class="card-header">
+                    <div>
+                        <div class="ticker">DBV.PA <span
+                                style="font-size: 0.8em; color: #fbbf24; margin-left: 10px;">⭐⭐</span></div>
+                        <div class="company-name">DBV Technologies S.A.</div>
+                        <div style="font-size: 1em; color: var(--text-secondary); margin-top: 8px;">Score: 8.92 | Healthcare</div>
+                    </div>
+                    <div style="font-size: 1em; color: #fbbf24; font-weight: 700; margin-top: 5px;">
+                        2.45 / 4
+                    </div>
+                </div>
+                <div style="text-align: right; margin-bottom: 30px;">
+                    <div class="price">3.56€</div>
+                    <div class="variation up">
+                        +0.99%
+                    </div>
+                </div>
+
+                <!-- Visual Summary Bars (Larger) -->
+                <div class="conviction-summary" style="height: 10px; display: flex; gap: 4px;">
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #60a5fa; width: 50%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #10b981; width: 75%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #f59e0b; width: 50%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #a855f7; width: 100%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #ec4899; width: 25%">
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    style="display: flex; justify-content: space-between; font-size: 1.1em; color: var(--text-secondary); margin-top: auto; padding-top: 20px; border-top: 2px solid rgba(255,255,255,0.05);">
+                    <span>TP: <span style="color: var(--success-color); font-weight: 800; font-size: 1.5em;">8.18€</span></span>
+                    <span>Stop: <span style="color: #ef4444; font-weight: 700; font-size: 1.3em;">2.48€</span></span>
+                </div>
+            </div>
+            
+            <div class="card" onclick="openDetails('NFLX')">
+                <div class="card-header">
+                    <div>
+                        <div class="ticker">NFLX <span
+                                style="font-size: 0.8em; color: #fbbf24; margin-left: 10px;">⭐⭐</span></div>
+                        <div class="company-name">Netflix, Inc.</div>
+                        <div style="font-size: 1em; color: var(--text-secondary); margin-top: 8px;">Score: 10.60 | Communication Services</div>
+                    </div>
+                    <div style="font-size: 1em; color: #fbbf24; font-weight: 700; margin-top: 5px;">
+                        2.25 / 4
+                    </div>
+                </div>
+                <div style="text-align: right; margin-bottom: 30px;">
+                    <div class="price">78.05$</div>
+                    <div class="variation up">
+                        +0.08%
+                    </div>
+                </div>
+
+                <!-- Visual Summary Bars (Larger) -->
+                <div class="conviction-summary" style="height: 10px; display: flex; gap: 4px;">
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #60a5fa; width: 25%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #10b981; width: 75%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #f59e0b; width: 50%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #a855f7; width: 100%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #ec4899; width: 50%">
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    style="display: flex; justify-content: space-between; font-size: 1.1em; color: var(--text-secondary); margin-top: auto; padding-top: 20px; border-top: 2px solid rgba(255,255,255,0.05);">
+                    <span>TP: <span style="color: var(--success-color); font-weight: 800; font-size: 1.5em;">165.55$</span></span>
+                    <span>Stop: <span style="color: #ef4444; font-weight: 700; font-size: 1.3em;">71.81$</span></span>
+                </div>
+            </div>
+            
+            <div class="card" onclick="openDetails('BKNG')">
+                <div class="card-header">
+                    <div>
+                        <div class="ticker">BKNG <span
+                                style="font-size: 0.8em; color: #fbbf24; margin-left: 10px;">⭐⭐</span></div>
+                        <div class="company-name">Booking Holdings Inc.</div>
+                        <div style="font-size: 1em; color: var(--text-secondary); margin-top: 8px;">Score: 10.19 | Consumer Cyclical</div>
+                    </div>
+                    <div style="font-size: 1em; color: #fbbf24; font-weight: 700; margin-top: 5px;">
+                        2.25 / 4
+                    </div>
+                </div>
+                <div style="text-align: right; margin-bottom: 30px;">
+                    <div class="price">3976.65$</div>
+                    <div class="variation down">
+                        -6.87%
+                    </div>
+                </div>
+
+                <!-- Visual Summary Bars (Larger) -->
+                <div class="conviction-summary" style="height: 10px; display: flex; gap: 4px;">
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #60a5fa; width: 25%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #10b981; width: 75%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #f59e0b; width: 50%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #a855f7; width: 100%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #ec4899; width: 50%">
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    style="display: flex; justify-content: space-between; font-size: 1.1em; color: var(--text-secondary); margin-top: auto; padding-top: 20px; border-top: 2px solid rgba(255,255,255,0.05);">
+                    <span>TP: <span style="color: var(--success-color); font-weight: 800; font-size: 1.5em;">8169.40$</span></span>
+                    <span>Stop: <span style="color: #ef4444; font-weight: 700; font-size: 1.3em;">3658.52$</span></span>
+                </div>
+            </div>
+            
+            <div class="card" onclick="openDetails('AL2SI.PA')">
+                <div class="card-header">
+                    <div>
+                        <div class="ticker">AL2SI.PA <span
+                                style="font-size: 0.8em; color: #fbbf24; margin-left: 10px;">⭐⭐</span></div>
+                        <div class="company-name">2CRSI S.A.</div>
+                        <div style="font-size: 1em; color: var(--text-secondary); margin-top: 8px;">Score: 6.43 | Technology</div>
+                    </div>
+                    <div style="font-size: 1em; color: #fbbf24; font-weight: 700; margin-top: 5px;">
+                        2.05 / 4
+                    </div>
+                </div>
+                <div style="text-align: right; margin-bottom: 30px;">
+                    <div class="price">21.70€</div>
+                    <div class="variation up">
+                        +8.50%
+                    </div>
+                </div>
+
+                <!-- Visual Summary Bars (Larger) -->
+                <div class="conviction-summary" style="height: 10px; display: flex; gap: 4px;">
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #60a5fa; width: 50%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #10b981; width: 25%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #f59e0b; width: 25%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #a855f7; width: 100%">
+                        </div>
+                    </div>
+                    <div
+                        style="height: 10px; flex:1; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden;">
+                        <div
+                            style="height: 100%; background: #ec4899; width: 100%">
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    style="display: flex; justify-content: space-between; font-size: 1.1em; color: var(--text-secondary); margin-top: auto; padding-top: 20px; border-top: 2px solid rgba(255,255,255,0.05);">
+                    <span>TP: <span style="color: var(--success-color); font-weight: 800; font-size: 1.5em;">41.52€</span></span>
+                    <span>Stop: <span style="color: #ef4444; font-weight: 700; font-size: 1.3em;">10.97€</span></span>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    </div>
+    <!-- DETAILS PAGE VIEW -->
+    <div id="details-page">
+        <div class="container">
+            <button class="back-btn" onclick="closeDetails()">
+                <span>⬅</span> Retour au Tableau de Bord
+            </button>
+
+            <div class="details-header">
+                <div class="details-title">
+                    <div class="details-ticker" id="m-ticker">TICKER</div>
+                    <h2 id="m-name">Company Name</h2>
+                </div>
+                <div style="text-align: right;">
+                    <div id="m-price" style="font-size: 3.5em; font-weight: 800; line-height: 1;">0.00</div>
+                    <div id="m-var" style="font-size: 1.8em; font-weight: 700;">+0.00%</div>
+                </div>
+            </div>
+
+            <div class="details-container">
+                <div style="grid-area: chart;">
+                    <div
+                        style="background: #10141b; border: 3px solid #232936; border-radius: 20px; padding: 35px; height: 700px;">
+                        <canvas id="bigChart"></canvas>
+                    </div>
+
+                    <div class="info-col" style="margin-top: 60px;">
+                        <h3>💡 Analyse Technique</h3>
+                        <div
+                            style="background: rgba(255,255,255,0.03); border-radius: 20px; padding: 40px; border: 2px solid rgba(255,255,255,0.05);">
+                            <table
+                                style="width: 100%; border-collapse: collapse; font-size: 1.4em; margin-bottom: 30px;">
+                                <tbody id="m-tech-body">
+                                    <!-- Dynamic -->
+                                </tbody>
+                            </table>
+                            <p id="m-desc-tech"
+                                style="font-size: 1.5em; color: var(--text-secondary); line-height: 1.6; font-style: italic;">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="info-col" style="margin-top: 60px;">
+                        <h3>⭐ Détail de la Conviction</h3>
+                        <div
+                            style="background: rgba(255,255,255,0.03); border-radius: 20px; padding: 40px; border: 2px solid rgba(255,255,255,0.05);">
+                            <div id="m-conviction-details-grid" style="display: grid; gap: 20px;">
+                                <!-- Dynamic breakdown -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="grid-area: infos;">
+                    <div class="strategy-box">
+                        <h3
+                            style="margin-bottom: 30px; font-size: 2.5em; border-bottom: 3px solid #232936; padding-bottom: 20px;">
+                            🎯 Stratégie de Trading</h3>
+                        <div class="strat-row">Entrée (Buy): <span id="m-entry"
+                                style="color: var(--accent-color); font-weight: 800;">0.00</span></div>
+                        <div class="strat-row" style="font-size: 1.8em; margin: 25px 0;">Objectif TP: <span
+                                id="m-target" style="color: var(--success-color); font-weight: 900;">0.00</span></div>
+                        <div class="strat-row">Stop Loss: <span id="m-stop"
+                                style="color: var(--danger-color); font-weight: 800;">0.00</span></div>
+                    </div>
+
+                    <div class="info-col" style="margin-top: 60px;">
+                        <h3>📊 Échelle de Prix (Ladder)</h3>
+                        <div
+                            style="font-size: 0.9em; color: var(--text-secondary); margin-bottom: 20px; font-style: italic; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
+                            💡 <b>Légende :</b> Les <b>extensions</b> (au-dessus du prix) sont des objectifs de profit
+                            potentiels. Les <b>retracements</b> (en-dessous) sont des zones de support où le prix
+                            pourrait rebondir.
+                        </div>
+                        <div id="m-fib-ladder" class="fib-ladder">
+                            <!-- Handled by JS -->
+                        </div>
+                    </div>
+
+                    <div class="info-col" style="margin-top: 60px;">
+                        <h3>🌟 Indice de Conviction</h3>
+                        <div
+                            style="background: #10141b; border: 3px solid #232936; border-radius: 20px; padding: 40px;">
+                            <div style="font-size: 2.5em; font-weight: 900; text-align: center; margin-bottom: 20px; color: #fbbf24;"
+                                id="m-stars-avg">0 / 4</div>
+                            <div id="m-conviction-explanations" style="font-size: 1.4em; color: var(--text-secondary);">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-col" style="margin-top: 60px;">
+                        <h3>🗞️ Fondamentaux & News</h3>
+                        <div id="m-catalyst-container"
+                            style="background: #10141b; border: 3px solid #232936; border-radius: 20px; padding: 40px; font-size: 1.4em;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ---------------- DATA INJECTION ----------------
+        window.stockData = {};
+        
+        window.stockData["VU.PA"] = {"analyst_potential": 119.57, "analyst_reco": "strong_buy", "analyst_target": 259.75, "catalyst": "Carrefour and Vusion sign France-wide smart store rollout by 2030 (2026-02-19)", "chartLabels": ["2025-11-25", "2025-11-26", "2025-11-27", "2025-11-28", "2025-12-01", "2025-12-02", "2025-12-03", "2025-12-04", "2025-12-05", "2025-12-08", "2025-12-09", "2025-12-10", "2025-12-11", "2025-12-12", "2025-12-15", "2025-12-16", "2025-12-17", "2025-12-18", "2025-12-19", "2025-12-22", "2025-12-23", "2025-12-24", "2025-12-29", "2025-12-30", "2025-12-31", "2026-01-02", "2026-01-05", "2026-01-06", "2026-01-07", "2026-01-08", "2026-01-09", "2026-01-12", "2026-01-13", "2026-01-14", "2026-01-15", "2026-01-16", "2026-01-19", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-26", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-02-02", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-09", "2026-02-10", "2026-02-11", "2026-02-12", "2026-02-13", "2026-02-16", "2026-02-17", "2026-02-18", "2026-02-19"], "chartPrices": [201.8, 203.2, 208.4, 208.8, 205.8, 202.6, 203.0, 206.0, 210.0, 212.0, 211.0, 207.8, 202.6, 202.2, 199.5, 200.2, 197.0, 197.6, 195.8, 201.8, 198.9, 199.1, 205.6, 204.4, 204.2, 209.0, 201.0, 205.0, 209.0, 199.8, 195.2, 184.1, 165.7, 157.7, 146.7, 145.2, 144.7, 140.8, 133.9, 133.1, 138.2, 133.9, 130.0, 132.6, 132.7, 131.1, 133.7, 135.5, 130.5, 132.3, 126.2, 129.4, 126.0, 126.7, 124.1, 120.1, 119.1, 131.0, 115.3, 118.3], "conviction_details": {"categories": {"finances": {"explanation": "Croissance forte (+50.2%), Saine gestion (Dette \u003c 2x), Consensus analystes positif, Potentiel analyste \u003e 15%", "stars": 3}, "fondamentaux": {"explanation": "Secteur prioritaire (Technology), Pr\u00e9sence institutionnelle, Taille critique (\u003e1Mrd)", "stars": 3}, "news": {"explanation": "Carrefour and Vusion sign France-wide smart store rollout by 2030 (2026-02-19)", "stars": 4}, "reseaux": {"explanation": "Sentiment Bearish, Volume Moyen", "stars": 1}, "technique": {"explanation": "Pattern Configuration Technique d\u00e9tect\u00e9", "stars": 1}}, "total_stars": 2, "weighted_average": 2.35}, "conviction_stars": 2, "currency": "EUR", "debt_color": "#10b981", "ema20": 131.43, "ema200": 192.88, "ema50": 155.83, "entry": 118.3, "fibonacci": {"extension_1272": 243.32, "extension_1618": 279.33, "extensions": {"ext_100": 215.0, "ext_1272": 243.32, "ext_1618": 279.33, "ext_2618": 383.43}, "high_ref": 215.0, "level_0": 215.0, "level_100": 110.9, "level_236": 190.43, "level_382": 175.23, "level_500": 162.95, "level_618": 150.67, "low_ref": 110.9, "retracements": {"fib_236": 190.43, "fib_382": 175.23, "fib_500": 162.95, "fib_618": 150.67}}, "final_score": 19.74, "ichimoku_trend": "Bearish", "is_pinned": false, "kijun": 133.45, "macd": -11.7, "macd_hist": 1.32, "macd_signal": -13.02, "mentions_24h": 20, "name": "Vusion S.A.", "news": [{"date": "2026-02-19", "link": "https://www.retail-insight-network.com/news/carrefour-vusion-smart-store-rollout/", "title": "Carrefour and Vusion sign France-wide smart store rollout by 2030"}, {"date": "2026-02-18", "link": "https://www.wsj.com/business/earnings/carrefour-aims-to-boost-tech-focus-on-key-regions-89ab51ef?siteid=yhoof2\u0026yptr=yahoo", "title": "Carrefour Aims to Boost Tech, Focus on Key Regions"}, {"date": "2026-02-12", "link": "https://finance.yahoo.com/news/strongpoint-asa-lts-0jez-q4-170109206.html", "title": "StrongPoint ASA (LTS:0JEZ) Q4 2025 Earnings Call Highlights: Navigating Growth and Challenges"}], "pattern": "Configuration Technique", "pe_color": "#10b981", "poc": 132.22, "price": 118.3, "reddit_count": 16, "rev_color": "#10b981", "rsi": 39.8, "sentiment_bullish_pct": 35.0, "social_score": 44.5, "social_sentiment": "Bearish", "social_volume": "Moyen", "ssa": 180.55, "ssb": 195.2, "stop": 108.84, "target": 383.43, "tech_desc": "Formation en \u0027Configuration Technique\u0027 d\u00e9tect\u00e9e. Le cours teste sa moyenne mobile \u00e0 50 jours. Une cl\u00f4ture au-dessus de 118.3 validerait la figure avec un objectif th\u00e9orique vers 383.43.", "tenkan": 132.45, "ticker": "VU.PA", "twitter_count": 70, "variation": 2.6, "volume_ratio": 0.96};
+        
+        window.stockData["ZS"] = {"analyst_potential": 78.77, "analyst_reco": "buy", "analyst_target": 304.23, "catalyst": "Zscaler vs. Qualys: Which Cybersecurity Stock Has the Edge? (2026-02-19)", "chartLabels": ["2025-11-21", "2025-11-24", "2025-11-25", "2025-11-26", "2025-11-28", "2025-12-01", "2025-12-02", "2025-12-03", "2025-12-04", "2025-12-05", "2025-12-08", "2025-12-09", "2025-12-10", "2025-12-11", "2025-12-12", "2025-12-15", "2025-12-16", "2025-12-17", "2025-12-18", "2025-12-19", "2025-12-22", "2025-12-23", "2025-12-24", "2025-12-26", "2025-12-29", "2025-12-30", "2025-12-31", "2026-01-02", "2026-01-05", "2026-01-06", "2026-01-07", "2026-01-08", "2026-01-09", "2026-01-12", "2026-01-13", "2026-01-14", "2026-01-15", "2026-01-16", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-26", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-02-02", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-09", "2026-02-10", "2026-02-11", "2026-02-12", "2026-02-13", "2026-02-17", "2026-02-18", "2026-02-19"], "chartPrices": [275.01, 280.35, 289.73, 251.97, 251.5, 243.28, 241.68, 243.66, 241.85, 242.68, 244.88, 243.01, 243.29, 242.08, 236.28, 230.31, 232.78, 226.43, 231.09, 232.55, 232.05, 229.32, 229.6, 230.52, 228.02, 227.42, 224.92, 220.57, 222.76, 222.03, 231.16, 220.32, 216.73, 216.63, 216.85, 214.27, 210.58, 213.98, 206.32, 208.66, 208.31, 209.62, 214.55, 219.67, 213.95, 200.63, 200.01, 200.61, 188.05, 185.79, 169.39, 167.33, 170.18, 174.34, 171.0, 170.9, 177.72, 172.59, 172.13, 170.18], "conviction_details": {"categories": {"finances": {"explanation": "Croissance forte (+25.5%), Consensus analystes positif, Potentiel analyste \u003e 15%", "stars": 2}, "fondamentaux": {"explanation": "Secteur prioritaire (Technology), Fort soutien institutionnel, Taille critique (\u003e1Mrd)", "stars": 4}, "news": {"explanation": "Zscaler vs. Qualys: Which Cybersecurity Stock Has the Edge? (2026-02-19)", "stars": 4}, "reseaux": {"explanation": "Sentiment Bearish, Volume Moyen", "stars": 1}, "technique": {"explanation": "Pattern Configuration Technique d\u00e9tect\u00e9", "stars": 1}}, "total_stars": 2, "weighted_average": 2.4}, "conviction_stars": 2, "currency": "USD", "debt_color": "var(--text-secondary)", "ema20": 185.43, "ema200": 246.81, "ema50": 210.5, "entry": 170.18, "fibonacci": {"extension_1272": 326.87, "extension_1618": 371.48, "extensions": {"ext_100": 291.8, "ext_1272": 326.87, "ext_1618": 371.48, "ext_2618": 500.4}, "high_ref": 291.8, "level_0": 291.8, "level_100": 162.87, "level_236": 261.37, "level_382": 242.55, "level_500": 227.34, "level_618": 212.12, "low_ref": 162.87, "retracements": {"fib_236": 261.37, "fib_382": 242.55, "fib_500": 227.34, "fib_618": 212.12}}, "final_score": 17.47, "ichimoku_trend": "Bearish", "is_pinned": false, "kijun": 195.94, "macd": -13.23, "macd_hist": 0.18, "macd_signal": -13.41, "mentions_24h": 21, "name": "Zscaler, Inc.", "news": [{"date": "2026-02-19", "link": "https://finance.yahoo.com/news/zscaler-vs-qualys-cybersecurity-stock-131200463.html", "title": "Zscaler vs. Qualys: Which Cybersecurity Stock Has the Edge?"}, {"date": "2026-02-19", "link": "https://finance.yahoo.com/news/panw-buy-koi-agentic-endpoint-124700677.html", "title": "PANW to Buy Koi: Is Agentic Endpoint Security the Next Growth Engine?"}, {"date": "2026-02-19", "link": "https://finance.yahoo.com/news/exploring-3-high-growth-tech-113833322.html", "title": "Exploring 3 High Growth Tech Stocks in the US Market"}], "pattern": "Configuration Technique", "pe_color": "#ef4444", "poc": 170.39, "price": 170.18, "reddit_count": 16, "rev_color": "#10b981", "rsi": 24.3, "sentiment_bullish_pct": 35.0, "social_score": 45.5, "social_sentiment": "Bearish", "social_volume": "Moyen", "ssa": 227.03, "ssb": 275.24, "stop": 156.57, "target": 500.4, "tech_desc": "Formation en \u0027Configuration Technique\u0027 d\u00e9tect\u00e9e. Le cours teste sa moyenne mobile \u00e0 50 jours. Une cl\u00f4ture au-dessus de 170.18 validerait la figure avec un objectif th\u00e9orique vers 500.4.", "tenkan": 171.39, "ticker": "ZS", "twitter_count": 73, "variation": -1.13, "volume_ratio": 0.59};
+        
+        window.stockData["ALMDT.PA"] = {"analyst_potential": 100.4, "analyst_reco": "strong_buy", "analyst_target": 10.0, "catalyst": "Median Technologies establishes distribution partnership with Tempus AI (2026-02-16)", "chartLabels": ["2025-11-25", "2025-11-26", "2025-11-27", "2025-11-28", "2025-12-01", "2025-12-02", "2025-12-03", "2025-12-04", "2025-12-05", "2025-12-08", "2025-12-09", "2025-12-10", "2025-12-11", "2025-12-12", "2025-12-15", "2025-12-16", "2025-12-17", "2025-12-18", "2025-12-19", "2025-12-22", "2025-12-23", "2025-12-24", "2025-12-29", "2025-12-30", "2025-12-31", "2026-01-02", "2026-01-05", "2026-01-06", "2026-01-07", "2026-01-08", "2026-01-09", "2026-01-12", "2026-01-13", "2026-01-14", "2026-01-15", "2026-01-16", "2026-01-19", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-26", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-02-02", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-09", "2026-02-10", "2026-02-11", "2026-02-12", "2026-02-13", "2026-02-16", "2026-02-17", "2026-02-18", "2026-02-19"], "chartPrices": [3.08, 3.1, 3.09, 3.3, 3.2, 3.26, 3.18, 3.16, 3.09, 2.94, 3.26, 3.14, 3.1, 3.16, 3.24, 3.25, 3.46, 3.65, 3.88, 4.57, 4.36, 4.44, 4.67, 4.61, 4.74, 4.39, 4.12, 3.9, 4.13, 4.06, 4.18, 4.1, 4.26, 4.41, 4.22, 4.32, 4.38, 4.26, 4.38, 4.66, 4.76, 4.5, 4.5, 4.34, 4.32, 4.14, 4.7, 4.32, 4.51, 4.3, 4.28, 6.27, 6.16, 6.25, 6.59, 5.46, 5.4, 5.01, 4.64, 4.99], "conviction_details": {"categories": {"finances": {"explanation": "Consensus analystes positif, Potentiel analyste \u003e 15%", "stars": 1}, "fondamentaux": {"explanation": "Secteur prioritaire (Healthcare), Pr\u00e9sence institutionnelle", "stars": 2}, "news": {"explanation": "Median Technologies establishes distribution partnership with Tempus AI (2026-02-16)", "stars": 4}, "reseaux": {"explanation": "Sentiment Bullish, Volume Haut", "stars": 3}, "technique": {"explanation": "Tendance haussi\u00e8re court terme", "stars": 2}}, "total_stars": 2, "weighted_average": 2.2}, "conviction_stars": 2, "currency": "EUR", "debt_color": "var(--text-secondary)", "ema20": 5.02, "ema200": 3.42, "ema50": 4.49, "entry": 4.99, "fibonacci": {"extension_1272": 8.47, "extension_1618": 10.0, "extensions": {"ext_100": 7.27, "ext_1272": 8.47, "ext_1618": 10.0, "ext_2618": 14.43}, "high_ref": 7.27, "level_0": 7.27, "level_100": 2.85, "level_236": 6.23, "level_382": 5.58, "level_500": 5.06, "level_618": 4.54, "low_ref": 2.85, "retracements": {"fib_236": 6.23, "fib_382": 5.58, "fib_500": 5.06, "fib_618": 4.54}}, "final_score": 15.15, "ichimoku_trend": "Bullish", "is_pinned": true, "kijun": 5.62, "macd": 0.27, "macd_hist": -0.07, "macd_signal": 0.34, "mentions_24h": 26, "name": "Median Technologies SA", "news": [{"date": "2026-02-17", "link": "https://finance.yahoo.com/news/tempus-ai-median-partner-add-162000559.html", "title": "Tempus AI \u0026 Median Partner to Add AI Lung Cancer Screening to Pixel"}, {"date": "2026-02-16", "link": "https://www.medicaldevice-network.com/news/median-technologies-establishes-distribution-partnership-with-tempus-ai/", "title": "Median Technologies establishes distribution partnership with Tempus AI"}, {"date": "2026-02-09", "link": "https://www.medicaldevice-network.com/news/fda-clears-median-technologies-lung-nodule-evaluation-software/", "title": "FDA clears Median Technologies\u2019 lung nodule evaluation software"}], "pattern": "Analysed Favorite", "pe_color": "#10b981", "poc": 6.32, "price": 4.99, "reddit_count": 20, "rev_color": "#f59e0b", "rsi": 56.8, "sentiment_bullish_pct": 100.0, "social_score": 96.0, "social_sentiment": "Bullish", "social_volume": "Haut", "ssa": 4.08, "ssb": 3.8, "stop": 4.45, "target": 14.43, "tech_desc": "Formation en \u0027Analysed Favorite\u0027 d\u00e9tect\u00e9e. Le cours \u00e9volue au-dessus de sa moyenne mobile \u00e0 50 jours, soutenant la tendance haussi\u00e8re. Une cl\u00f4ture au-dessus de 4.99 validerait la figure avec un objectif th\u00e9orique vers 14.43.", "tenkan": 5.92, "ticker": "ALMDT.PA", "twitter_count": 91, "variation": 7.54, "volume_ratio": 1.34};
+        
+        window.stockData["SNOW"] = {"analyst_potential": 54.08, "analyst_reco": "buy", "analyst_target": 272.36, "catalyst": "Snowflake (SNOW) Is Considered a Good Investment by Brokers: Is That True? (2026-02-19)", "chartLabels": ["2025-11-21", "2025-11-24", "2025-11-25", "2025-11-26", "2025-11-28", "2025-12-01", "2025-12-02", "2025-12-03", "2025-12-04", "2025-12-05", "2025-12-08", "2025-12-09", "2025-12-10", "2025-12-11", "2025-12-12", "2025-12-15", "2025-12-16", "2025-12-17", "2025-12-18", "2025-12-19", "2025-12-22", "2025-12-23", "2025-12-24", "2025-12-26", "2025-12-29", "2025-12-30", "2025-12-31", "2026-01-02", "2026-01-05", "2026-01-06", "2026-01-07", "2026-01-08", "2026-01-09", "2026-01-12", "2026-01-13", "2026-01-14", "2026-01-15", "2026-01-16", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-26", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-02-02", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-09", "2026-02-10", "2026-02-11", "2026-02-12", "2026-02-13", "2026-02-17", "2026-02-18", "2026-02-19"], "chartPrices": [234.03, 241.99, 250.32, 248.66, 251.24, 252.0, 259.68, 265.0, 234.77, 228.79, 225.31, 222.6, 216.55, 220.51, 217.93, 215.28, 220.6, 216.29, 221.31, 222.46, 226.84, 225.1, 221.93, 223.88, 222.9, 222.05, 219.36, 216.71, 224.36, 234.53, 233.5, 223.79, 219.09, 220.28, 209.39, 206.16, 207.74, 210.38, 206.21, 206.5, 211.13, 209.69, 211.27, 212.75, 216.0, 199.37, 192.7, 190.68, 173.24, 165.29, 156.71, 168.43, 175.95, 182.58, 178.83, 172.91, 182.29, 177.1, 176.08, 176.77], "conviction_details": {"categories": {"finances": {"explanation": "Croissance forte (+28.7%), Consensus analystes positif, Potentiel analyste \u003e 15%", "stars": 2}, "fondamentaux": {"explanation": "Secteur prioritaire (Technology), Fort soutien institutionnel, Taille critique (\u003e1Mrd)", "stars": 4}, "news": {"explanation": "Snowflake (SNOW) Is Considered a Good Investment by Brokers: Is That True? (2026-02-19)", "stars": 4}, "reseaux": {"explanation": "Sentiment Bearish, Volume Haut", "stars": 2}, "technique": {"explanation": "Pattern Configuration Technique d\u00e9tect\u00e9", "stars": 1}}, "total_stars": 3, "weighted_average": 2.5}, "conviction_stars": 3, "currency": "USD", "debt_color": "var(--text-secondary)", "ema20": 185.59, "ema200": 212.78, "ema50": 203.11, "entry": 176.77, "fibonacci": {"extension_1272": 298.71, "extension_1618": 337.51, "extensions": {"ext_100": 268.21, "ext_1272": 298.71, "ext_1618": 337.51, "ext_2618": 449.64}, "high_ref": 268.21, "level_0": 268.21, "level_100": 156.08, "level_236": 241.75, "level_382": 225.38, "level_500": 212.14, "level_618": 198.91, "low_ref": 156.08, "retracements": {"fib_236": 241.75, "fib_382": 225.38, "fib_500": 212.14, "fib_618": 198.91}}, "final_score": 14.38, "ichimoku_trend": "Bearish", "is_pinned": false, "kijun": 189.57, "macd": -10.13, "macd_hist": 0.99, "macd_signal": -11.12, "mentions_24h": 31, "name": "Snowflake Inc.", "news": [{"date": "2026-02-19", "link": "https://finance.yahoo.com/news/earnings-preview-block-xyz-q4-150009238.html", "title": "Earnings Preview: Block (XYZ) Q4 Earnings Expected to Decline"}, {"date": "2026-02-19", "link": "https://finance.yahoo.com/news/traders-left-unscratchable-itch-anthropic-111501092.html", "title": "Traders Left With \u2018Unscratchable Itch\u2019 for Anthropic Exposure"}, {"date": "2026-02-19", "link": "https://finance.yahoo.com/news/snowflake-snow-considered-good-investment-143004281.html", "title": "Snowflake (SNOW) Is Considered a Good Investment by Brokers: Is That True?"}], "pattern": "Configuration Technique", "pe_color": "#ef4444", "poc": 218.98, "price": 176.77, "reddit_count": 24, "rev_color": "#10b981", "rsi": 38.0, "sentiment_bullish_pct": 0.0, "social_score": 30.0, "social_sentiment": "Bearish", "social_volume": "Haut", "ssa": 226.58, "ssb": 246.29, "stop": 162.63, "target": 449.64, "tech_desc": "Formation en \u0027Configuration Technique\u0027 d\u00e9tect\u00e9e. Le cours teste sa moyenne mobile \u00e0 50 jours. Une cl\u00f4ture au-dessus de 176.77 validerait la figure avec un objectif th\u00e9orique vers 449.64.", "tenkan": 173.99, "ticker": "SNOW", "twitter_count": 108, "variation": 0.39, "volume_ratio": 0.18};
+        
+        window.stockData["WKL.AS"] = {"analyst_potential": 124.41, "analyst_reco": "buy", "analyst_target": 139.18, "catalyst": "Wolters Kluwer (ENXTAM:WKL) Valuation Check As Libra Legal AI Workspace Expands To Italy (2026-02-19)", "chartLabels": ["2025-11-25", "2025-11-26", "2025-11-27", "2025-11-28", "2025-12-01", "2025-12-02", "2025-12-03", "2025-12-04", "2025-12-05", "2025-12-08", "2025-12-09", "2025-12-10", "2025-12-11", "2025-12-12", "2025-12-15", "2025-12-16", "2025-12-17", "2025-12-18", "2025-12-19", "2025-12-22", "2025-12-23", "2025-12-24", "2025-12-29", "2025-12-30", "2025-12-31", "2026-01-02", "2026-01-05", "2026-01-06", "2026-01-07", "2026-01-08", "2026-01-09", "2026-01-12", "2026-01-13", "2026-01-14", "2026-01-15", "2026-01-16", "2026-01-19", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-26", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-02-02", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-09", "2026-02-10", "2026-02-11", "2026-02-12", "2026-02-13", "2026-02-16", "2026-02-17", "2026-02-18", "2026-02-19"], "chartPrices": [91.38, 91.7, 91.02, 91.6, 90.64, 89.16, 90.44, 89.94, 90.28, 87.32, 88.7, 88.08, 88.64, 88.86, 91.88, 90.5, 90.56, 90.74, 89.52, 90.08, 88.24, 88.26, 88.9, 89.18, 88.34, 87.96, 92.08, 90.72, 90.44, 90.16, 91.26, 90.2, 88.46, 87.8, 88.0, 87.64, 84.88, 84.58, 84.08, 83.3, 84.38, 83.52, 80.56, 81.32, 79.22, 78.88, 80.2, 70.04, 68.56, 69.96, 67.7, 66.82, 65.72, 62.34, 60.48, 64.18, 61.84, 62.14, 61.74, 62.02], "conviction_details": {"categories": {"finances": {"explanation": "Endettement mod\u00e9r\u00e9, Consensus analystes positif, Potentiel analyste \u003e 15%", "stars": 1}, "fondamentaux": {"explanation": "Fort soutien institutionnel, Taille critique (\u003e1Mrd)", "stars": 3}, "news": {"explanation": "Wolters Kluwer (ENXTAM:WKL) Valuation Check As Libra Legal AI Workspace Expands To Italy (2026-02-19)", "stars": 4}, "reseaux": {"explanation": "Sentiment Bearish, Volume Moyen", "stars": 1}, "technique": {"explanation": "Pattern Configuration Technique d\u00e9tect\u00e9", "stars": 1}}, "total_stars": 2, "weighted_average": 1.95}, "conviction_stars": 2, "currency": "EUR", "debt_color": "#ef4444", "ema20": 69.43, "ema200": 107.11, "ema50": 79.15, "entry": 62.02, "fibonacci": {"extension_1272": 102.05, "extension_1618": 113.4, "extensions": {"ext_100": 93.12, "ext_1272": 102.05, "ext_1618": 113.4, "ext_2618": 146.22}, "high_ref": 93.12, "level_0": 93.12, "level_100": 60.3, "level_236": 85.37, "level_382": 80.58, "level_500": 76.71, "level_618": 72.84, "low_ref": 60.3, "retracements": {"fib_236": 85.37, "fib_382": 80.58, "fib_500": 76.71, "fib_618": 72.84}}, "final_score": 12.42, "ichimoku_trend": "Bearish", "is_pinned": false, "kijun": 74.29, "macd": -6.37, "macd_hist": -0.33, "macd_signal": -6.04, "mentions_24h": 19, "name": "Wolters Kluwer N.V.", "news": [{"date": "2026-02-19", "link": "https://finance.yahoo.com/news/wolters-kluwer-enxtam-wkl-valuation-091046501.html", "title": "Wolters Kluwer (ENXTAM:WKL) Valuation Check As Libra Legal AI Workspace Expands To Italy"}, {"date": "2026-02-16", "link": "https://www.wsj.com/finance/banking/financial-services-roundup-market-talk-6b5e0ae3?siteid=yhoof2\u0026yptr=yahoo", "title": "Financial Services Roundup: Market Talk"}, {"date": "2026-02-16", "link": "https://www.wsj.com/tech/tech-media-telecom-roundup-market-talk-9c4b5a8e?siteid=yhoof2\u0026yptr=yahoo", "title": "Tech, Media \u0026 Telecom Roundup: Market Talk"}], "pattern": "Configuration Technique", "pe_color": "#10b981", "poc": 88.13, "price": 62.02, "reddit_count": 15, "rev_color": "#f59e0b", "rsi": 22.7, "sentiment_bullish_pct": 35.0, "social_score": 43.5, "social_sentiment": "Bearish", "social_volume": "Moyen", "ssa": 89.88, "ssb": 98.94, "stop": 57.06, "target": 146.22, "tech_desc": "Formation en \u0027Configuration Technique\u0027 d\u00e9tect\u00e9e. Le cours teste sa moyenne mobile \u00e0 50 jours. Une cl\u00f4ture au-dessus de 62.02 validerait la figure avec un objectif th\u00e9orique vers 146.22.", "tenkan": 64.62, "ticker": "WKL.AS", "twitter_count": 66, "variation": 0.45, "volume_ratio": 0.59};
+        
+        window.stockData["DBV.PA"] = {"analyst_potential": 11.24, "analyst_reco": "buy", "analyst_target": 3.96, "catalyst": "European Equities Traded in the US as American Depositary Receipts Track Slightly Lower in Tuesday Trading (2026-02-17)", "chartLabels": ["2025-11-25", "2025-11-26", "2025-11-27", "2025-11-28", "2025-12-01", "2025-12-02", "2025-12-03", "2025-12-04", "2025-12-05", "2025-12-08", "2025-12-09", "2025-12-10", "2025-12-11", "2025-12-12", "2025-12-15", "2025-12-16", "2025-12-17", "2025-12-18", "2025-12-19", "2025-12-22", "2025-12-23", "2025-12-24", "2025-12-29", "2025-12-30", "2025-12-31", "2026-01-02", "2026-01-05", "2026-01-06", "2026-01-07", "2026-01-08", "2026-01-09", "2026-01-12", "2026-01-13", "2026-01-14", "2026-01-15", "2026-01-16", "2026-01-19", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-26", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-02-02", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-09", "2026-02-10", "2026-02-11", "2026-02-12", "2026-02-13", "2026-02-16", "2026-02-17", "2026-02-18", "2026-02-19"], "chartPrices": [2.28, 2.32, 2.5, 2.29, 2.3, 2.26, 2.27, 2.28, 2.27, 2.7, 2.95, 3.32, 3.45, 3.22, 3.12, 3.07, 3.68, 3.68, 3.6, 3.42, 3.13, 3.2, 3.31, 3.3, 3.38, 3.27, 3.0, 3.01, 3.07, 2.96, 3.03, 3.1, 2.97, 3.05, 3.1, 3.68, 3.76, 3.69, 3.8, 3.81, 4.26, 3.95, 3.99, 4.11, 3.95, 3.81, 3.8, 3.92, 3.93, 3.84, 3.63, 3.87, 4.04, 3.72, 3.69, 3.69, 3.43, 3.46, 3.53, 3.56], "conviction_details": {"categories": {"finances": {"explanation": "Croissance forte (+158.8%), Consensus analystes positif", "stars": 2}, "fondamentaux": {"explanation": "Secteur prioritaire (Healthcare), Fort soutien institutionnel", "stars": 3}, "news": {"explanation": "European Equities Traded in the US as American Depositary Receipts Track Slightly Lower in Tuesday Trading (2026-02-17)", "stars": 4}, "reseaux": {"explanation": "Sentiment Neutre, Volume Moyen", "stars": 1}, "technique": {"explanation": "Tendance haussi\u00e8re court terme", "stars": 2}}, "total_stars": 2, "weighted_average": 2.45}, "conviction_stars": 2, "currency": "EUR", "debt_color": "var(--text-secondary)", "ema20": 3.66, "ema200": 2.5, "ema50": 3.44, "entry": 3.56, "fibonacci": {"extension_1272": 5.12, "extension_1618": 5.91, "extensions": {"ext_100": 4.5, "ext_1272": 5.12, "ext_1618": 5.91, "ext_2618": 8.18}, "high_ref": 4.5, "level_0": 4.5, "level_100": 2.22, "level_236": 3.96, "level_382": 3.63, "level_500": 3.36, "level_618": 3.09, "low_ref": 2.22, "retracements": {"fib_236": 3.96, "fib_382": 3.63, "fib_500": 3.36, "fib_618": 3.09}}, "final_score": 8.92, "ichimoku_trend": "Bullish", "is_pinned": true, "kijun": 3.7, "macd": 0.02, "macd_hist": -0.07, "macd_signal": 0.09, "mentions_24h": 15, "name": "DBV Technologies S.A.", "news": [{"date": "2026-02-17", "link": "https://finance.yahoo.com/news/european-equities-traded-us-american-155552012.html", "title": "European Equities Traded in the US as American Depositary Receipts Track Slightly Lower in Tuesday Trading"}, {"date": "2026-02-13", "link": "https://www.marketbeat.com/instant-alerts/dbv-technologies-details-viaskin-peanut-bla-timeline-vitesse-data-and-launch-plans-at-conference-2026-02-13/?utm_source=yahoofinance\u0026utm_medium=yahoofinance", "title": "DBV Technologies Details Viaskin Peanut BLA Timeline, VITESSE Data and Launch Plans at Conference"}, {"date": "2026-02-12", "link": "https://finance.yahoo.com/news/too-consider-dbv-technologies-enxtpa-161252728.html", "title": "Is It Too Late To Consider DBV Technologies (ENXTPA:DBV) After A 359% One-Year Surge?"}], "pattern": "Analysed Favorite", "pe_color": "#10b981", "poc": 3.71, "price": 3.56, "reddit_count": 12, "rev_color": "#10b981", "rsi": 42.3, "sentiment_bullish_pct": 50.0, "social_score": 50.0, "social_sentiment": "Neutre", "social_volume": "Moyen", "ssa": 3.26, "ssb": 3.36, "stop": 2.48, "target": 8.18, "tech_desc": "Formation en \u0027Analysed Favorite\u0027 d\u00e9tect\u00e9e. Le cours \u00e9volue au-dessus de sa moyenne mobile \u00e0 50 jours, soutenant la tendance haussi\u00e8re. Une cl\u00f4ture au-dessus de 3.56 validerait la figure avec un objectif th\u00e9orique vers 8.18.", "tenkan": 3.76, "ticker": "DBV.PA", "twitter_count": 52, "variation": 0.99, "volume_ratio": 0.35};
+        
+        window.stockData["NFLX"] = {"analyst_potential": 42.77, "analyst_reco": "buy", "analyst_target": 111.43, "catalyst": "Market Chatter: Warner\u0027s Potential Sale Impact on Theaters Investigated by US Justice Department (2026-02-19)", "chartLabels": ["2025-11-21", "2025-11-24", "2025-11-25", "2025-11-26", "2025-11-28", "2025-12-01", "2025-12-02", "2025-12-03", "2025-12-04", "2025-12-05", "2025-12-08", "2025-12-09", "2025-12-10", "2025-12-11", "2025-12-12", "2025-12-15", "2025-12-16", "2025-12-17", "2025-12-18", "2025-12-19", "2025-12-22", "2025-12-23", "2025-12-24", "2025-12-26", "2025-12-29", "2025-12-30", "2025-12-31", "2026-01-02", "2026-01-05", "2026-01-06", "2026-01-07", "2026-01-08", "2026-01-09", "2026-01-12", "2026-01-13", "2026-01-14", "2026-01-15", "2026-01-16", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-26", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-02-02", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-09", "2026-02-10", "2026-02-11", "2026-02-12", "2026-02-13", "2026-02-17", "2026-02-18", "2026-02-19"], "chartPrices": [104.31, 106.97, 104.4, 106.14, 107.58, 109.13, 109.35, 103.96, 103.22, 100.24, 96.79, 96.71, 92.71, 94.09, 95.19, 93.77, 94.57, 94.79, 94.0, 94.39, 93.23, 93.5, 93.64, 94.47, 94.15, 93.78, 93.76, 90.99, 91.46, 90.65, 90.73, 90.53, 89.46, 89.41, 90.32, 88.55, 88.05, 88.0, 87.26, 85.36, 83.54, 86.12, 85.7, 85.58, 84.64, 83.16, 83.49, 82.76, 79.94, 80.16, 80.87, 82.2, 81.47, 82.21, 79.62, 75.86, 76.87, 77.0, 77.99, 78.05], "conviction_details": {"categories": {"finances": {"explanation": "Saine gestion (Dette \u003c 2x), Consensus analystes positif, Potentiel analyste \u003e 15%", "stars": 2}, "fondamentaux": {"explanation": "Fort soutien institutionnel, Taille critique (\u003e1Mrd)", "stars": 3}, "news": {"explanation": "Market Chatter: Warner\u0027s Potential Sale Impact on Theaters Investigated by US Justice Department (2026-02-19)", "stars": 4}, "reseaux": {"explanation": "Sentiment Bearish, Volume Haut", "stars": 2}, "technique": {"explanation": "Pattern Configuration Technique d\u00e9tect\u00e9", "stars": 1}}, "total_stars": 2, "weighted_average": 2.25}, "conviction_stars": 2, "currency": "USD", "debt_color": "#f59e0b", "ema20": 81.38, "ema200": 103.16, "ema50": 88.25, "entry": 78.05, "fibonacci": {"extension_1272": 119.11, "extension_1618": 131.05, "extensions": {"ext_100": 109.73, "ext_1272": 119.11, "ext_1618": 131.05, "ext_2618": 165.55}, "high_ref": 109.73, "level_0": 109.73, "level_100": 75.23, "level_236": 101.59, "level_382": 96.55, "level_500": 92.48, "level_618": 88.41, "low_ref": 75.23, "retracements": {"fib_236": 101.59, "fib_382": 96.55, "fib_500": 92.48, "fib_618": 88.41}}, "final_score": 10.6, "ichimoku_trend": "Bearish", "is_pinned": false, "kijun": 83.41, "macd": -3.28, "macd_hist": 0.04, "macd_signal": -3.32, "mentions_24h": 37, "name": "Netflix, Inc.", "news": [{"date": "2026-02-19", "link": "https://finance.yahoo.com/news/market-chatter-warner-apos-potential-144932355.html", "title": "Market Chatter: Warner\u0027s Potential Sale Impact on Theaters Investigated by US Justice Department"}, {"date": "2026-02-19", "link": "https://247wallst.com/media/2026/02/19/youtube-threat-drives-netflix-to-52-week-low/", "title": "YouTube Threat Drives Netflix to 52-week Low"}, {"date": "2026-02-19", "link": "https://finance.yahoo.com/news/netflix-vs-comcast-media-stock-135400984.html", "title": "Netflix vs. Comcast: Which Media Stock Has an Edge Right Now?"}], "pattern": "Configuration Technique", "pe_color": "#f59e0b", "poc": 93.44, "price": 78.05, "reddit_count": 29, "rev_color": "#10b981", "rsi": 34.2, "sentiment_bullish_pct": 0.0, "social_score": 30.0, "social_sentiment": "Bearish", "social_volume": "Haut", "ssa": 93.93, "ssb": 102.53, "stop": 71.81, "target": 165.55, "tech_desc": "Formation en \u0027Configuration Technique\u0027 d\u00e9tect\u00e9e. Le cours teste sa moyenne mobile \u00e0 50 jours. Une cl\u00f4ture au-dessus de 78.05 validerait la figure avec un objectif th\u00e9orique vers 165.55.", "tenkan": 79.95, "ticker": "NFLX", "twitter_count": 129, "variation": 0.08, "volume_ratio": 0.21};
+        
+        window.stockData["BKNG"] = {"analyst_potential": 51.89, "analyst_reco": "buy", "analyst_target": 6040.28, "catalyst": "Booking Holdings\u0027 Higher Investments in 2026 to Drive Top-Line Growth, BofA Says (2026-02-19)", "chartLabels": ["2025-11-21", "2025-11-24", "2025-11-25", "2025-11-26", "2025-11-28", "2025-12-01", "2025-12-02", "2025-12-03", "2025-12-04", "2025-12-05", "2025-12-08", "2025-12-09", "2025-12-10", "2025-12-11", "2025-12-12", "2025-12-15", "2025-12-16", "2025-12-17", "2025-12-18", "2025-12-19", "2025-12-22", "2025-12-23", "2025-12-24", "2025-12-26", "2025-12-29", "2025-12-30", "2025-12-31", "2026-01-02", "2026-01-05", "2026-01-06", "2026-01-07", "2026-01-08", "2026-01-09", "2026-01-12", "2026-01-13", "2026-01-14", "2026-01-15", "2026-01-16", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-26", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-02-02", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-09", "2026-02-10", "2026-02-11", "2026-02-12", "2026-02-13", "2026-02-17", "2026-02-18", "2026-02-19"], "chartPrices": [4758.9, 4866.06, 4896.87, 4902.47, 4905.3, 4882.47, 5125.26, 5037.57, 5017.6, 5197.04, 5177.39, 5195.76, 5277.2, 5279.68, 5301.64, 5457.7, 5436.93, 5340.98, 5345.47, 5393.74, 5406.99, 5439.27, 5446.51, 5440.14, 5441.33, 5427.15, 5355.33, 5323.2, 5367.37, 5348.39, 5445.72, 5445.0, 5492.11, 5391.52, 5314.71, 5187.02, 5193.06, 5115.91, 5027.0, 5163.61, 5150.9, 5098.5, 5107.28, 5153.41, 5085.22, 5113.32, 5001.84, 5122.25, 4644.64, 4607.13, 4443.42, 4457.17, 4237.05, 4281.14, 4312.44, 4159.1, 4140.6, 4140.15, 4269.99, 3976.65], "conviction_details": {"categories": {"finances": {"explanation": "Saine gestion (Dette \u003c 2x), Consensus analystes positif, Potentiel analyste \u003e 15%", "stars": 2}, "fondamentaux": {"explanation": "Fort soutien institutionnel, Taille critique (\u003e1Mrd)", "stars": 3}, "news": {"explanation": "Booking Holdings\u0027 Higher Investments in 2026 to Drive Top-Line Growth, BofA Says (2026-02-19)", "stars": 4}, "reseaux": {"explanation": "Sentiment Bearish, Volume Haut", "stars": 2}, "technique": {"explanation": "Pattern Configuration Technique d\u00e9tect\u00e9", "stars": 1}}, "total_stars": 2, "weighted_average": 2.25}, "conviction_stars": 2, "currency": "USD", "debt_color": "#10b981", "ema20": 4528.1, "ema200": 5118.23, "ema50": 4854.04, "entry": 3976.65, "fibonacci": {"extension_1272": 5965.51, "extension_1618": 6532.04, "extensions": {"ext_100": 5520.15, "ext_1272": 5965.51, "ext_1618": 6532.04, "ext_2618": 8169.4}, "high_ref": 5520.15, "level_0": 5520.15, "level_100": 3882.79, "level_236": 5133.73, "level_382": 4894.68, "level_500": 4701.47, "level_618": 4508.26, "low_ref": 3882.79, "retracements": {"fib_236": 5133.73, "fib_382": 4894.68, "fib_500": 4701.47, "fib_618": 4508.26}}, "final_score": 10.19, "ichimoku_trend": "Bearish", "is_pinned": false, "kijun": 4650.28, "macd": -290.03, "macd_hist": -47.06, "macd_signal": -242.97, "mentions_24h": 45, "name": "Booking Holdings Inc.", "news": [{"date": "2026-02-19", "link": "https://finance.yahoo.com/video/chewy-carvana-booking-holdings-top-155204737.html", "title": "Chewy, Carvana, Booking Holdings: Top Analyst Calls"}, {"date": "2026-02-19", "link": "https://finance.yahoo.com/news/live/earnings-live-klarna-stock-plunges-despite-q4-revenue-growth-etsy-and-deere-shares-pop-walmart-rises-144324891.html", "title": "Earnings live: Klarna stock plunges despite Q4 revenue growth, Etsy and Deere shares pop, Walmart rises"}, {"date": "2026-02-19", "link": "https://finance.yahoo.com/news/booking-holdings-apos-higher-investments-161357337.html", "title": "Booking Holdings\u0027 Higher Investments in 2026 to Drive Top-Line Growth, BofA Says"}], "pattern": "Configuration Technique", "pe_color": "#10b981", "poc": 5151.13, "price": 3976.65, "reddit_count": 36, "rev_color": "#10b981", "rsi": 18.7, "sentiment_bullish_pct": 35.0, "social_score": 54.5, "social_sentiment": "Bearish", "social_volume": "Haut", "ssa": 5323.12, "ssb": 5041.27, "stop": 3658.52, "target": 8169.4, "tech_desc": "Formation en \u0027Configuration Technique\u0027 d\u00e9tect\u00e9e. Le cours teste sa moyenne mobile \u00e0 50 jours. Une cl\u00f4ture au-dessus de 3976.65 validerait la figure avec un objectif th\u00e9orique vers 8169.4.", "tenkan": 4203.36, "ticker": "BKNG", "twitter_count": 157, "variation": -6.87, "volume_ratio": 0.85};
+        
+        window.stockData["AL2SI.PA"] = {"analyst_potential": 6.91, "analyst_reco": "strong_buy", "analyst_target": 23.2, "catalyst": "2CRSi d\u00e9croche une commande de 140 MEUR en serveurs d\u0027IA pour un projet Cloud au Japon (2026-02-19)", "chartLabels": ["2025-11-25", "2025-11-26", "2025-11-27", "2025-11-28", "2025-12-01", "2025-12-02", "2025-12-03", "2025-12-04", "2025-12-05", "2025-12-08", "2025-12-09", "2025-12-10", "2025-12-11", "2025-12-12", "2025-12-15", "2025-12-16", "2025-12-17", "2025-12-18", "2025-12-19", "2025-12-22", "2025-12-23", "2025-12-24", "2025-12-29", "2025-12-30", "2025-12-31", "2026-01-02", "2026-01-05", "2026-01-06", "2026-01-07", "2026-01-08", "2026-01-09", "2026-01-12", "2026-01-13", "2026-01-14", "2026-01-15", "2026-01-16", "2026-01-19", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-26", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-02-02", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-09", "2026-02-10", "2026-02-11", "2026-02-12", "2026-02-13", "2026-02-16", "2026-02-17", "2026-02-18", "2026-02-19"], "chartPrices": [11.38, 11.04, 11.34, 11.58, 11.24, 11.26, 10.84, 10.96, 11.02, 11.36, 11.74, 11.32, 11.52, 11.44, 11.92, 12.0, 11.5, 12.64, 12.26, 11.82, 11.26, 11.56, 11.28, 11.3, 11.46, 11.38, 11.18, 11.0, 10.34, 10.58, 10.82, 10.9, 10.68, 11.5, 12.28, 12.18, 11.72, 11.58, 12.14, 13.1, 13.06, 12.88, 13.5, 12.78, 13.06, 14.52, 15.78, 15.48, 15.36, 15.3, 14.86, 16.2, 17.86, 16.8, 16.5, 16.42, 16.72, 17.24, 20.0, 21.7], "conviction_details": {"categories": {"finances": {"explanation": "Endettement mod\u00e9r\u00e9, Consensus analystes positif", "stars": 1}, "fondamentaux": {"explanation": "Secteur prioritaire (Technology)", "stars": 1}, "news": {"explanation": "2CRSi d\u00e9croche une commande de 140 MEUR en serveurs d\u0027IA pour un projet Cloud au Japon (2026-02-19)", "stars": 4}, "reseaux": {"explanation": "Sentiment Bullish, Volume Haut", "stars": 4}, "technique": {"explanation": "Tendance haussi\u00e8re court terme", "stars": 2}}, "total_stars": 2, "weighted_average": 2.05}, "conviction_stars": 2, "currency": "EUR", "debt_color": "#ef4444", "ema20": 16.24, "ema200": 10.76, "ema50": 14.17, "entry": 21.7, "fibonacci": {"extension_1272": 25.36, "extension_1618": 29.52, "extensions": {"ext_100": 22.1, "ext_1272": 25.36, "ext_1618": 29.52, "ext_2618": 41.52}, "high_ref": 22.1, "level_0": 22.1, "level_100": 10.1, "level_236": 19.27, "level_382": 17.52, "level_500": 16.1, "level_618": 14.68, "low_ref": 10.1, "retracements": {"fib_236": 19.27, "fib_382": 17.52, "fib_500": 16.1, "fib_618": 14.68}}, "final_score": 6.43, "ichimoku_trend": "Bullish", "is_pinned": true, "kijun": 16.66, "macd": 1.8, "macd_hist": 0.46, "macd_signal": 1.34, "mentions_24h": 36, "name": "2CRSI S.A.", "news": [{"date": "2026-02-19", "link": "https://www.boursorama.com/bourse/actualites/2crsi-decroche-une-commande-de-140-meur-en-serveurs-d-ia-pour-un-projet-cloud-au-japon-ba7ce23e468f58462016863260bfdfc0", "title": "2CRSi d\u00e9croche une commande de 140 MEUR en serveurs d\u0027IA pour un projet Cloud au Japon"}], "pattern": "Analysed Favorite", "pe_color": "#10b981", "poc": 11.19, "price": 21.7, "reddit_count": 28, "rev_color": "#ef4444", "rsi": 80.2, "sentiment_bullish_pct": 65.0, "social_score": 75.5, "social_sentiment": "Bullish", "social_volume": "Haut", "ssa": 11.32, "ssb": 11.83, "stop": 10.97, "target": 41.52, "tech_desc": "Formation en \u0027Analysed Favorite\u0027 d\u00e9tect\u00e9e. Le cours \u00e9volue au-dessus de sa moyenne mobile \u00e0 50 jours, soutenant la tendance haussi\u00e8re. Une cl\u00f4ture au-dessus de 21.7 validerait la figure avec un objectif th\u00e9orique vers 41.52.", "tenkan": 18.56, "ticker": "AL2SI.PA", "twitter_count": 126, "variation": 8.5, "volume_ratio": 1.56};
+        
+
+        // ---------------- CHART CONFIG ----------------
+        Chart.defaults.color = '#9ca3af';
+        Chart.defaults.font.family = 'Inter';
+        Chart.defaults.font.size = 18; // Bigger chart fonts
+
+        let bigChart = null;
+
+        // ---------------- SPA NAVIGATION ----------------
+        window.openDetails = function (ticker) {
+            console.log("Opening details for:", ticker);
+            try {
+                const data = window.stockData[ticker];
+                if (!data) {
+                    console.error("No data found for ticker:", ticker);
+                    return;
+                }
+
+                // Populate Metadata with safety checks
+                const safeFix = (val, dec = 2) => {
+                    const n = parseFloat(val);
+                    return isNaN(n) ? "0.00" : n.toFixed(dec);
+                };
+
+                document.getElementById('m-ticker').innerText = data.ticker || ticker;
+                document.getElementById('m-name').innerText = data.name || "N/A";
+                document.getElementById('m-price').innerText = safeFix(data.price);
+
+                const varElem = document.getElementById('m-var');
+                const v = parseFloat(data.variation);
+                varElem.innerText = (v > 0 ? '+' : '') + safeFix(v) + '%';
+                varElem.style.color = v >= 0 ? 'var(--success-color)' : 'var(--danger-color)';
+
+                // Trading Strategy
+                const curr = data.currency || 'USD';
+                document.getElementById('m-entry').innerText = (data.entry || "0.00") + " " + curr;
+                document.getElementById('m-target').innerText = (data.target || "0.00") + " " + curr;
+                document.getElementById('m-stop').innerText = (data.stop || "0.00") + " " + curr;
+
+                // Technical Detail Table
+                const rsi = parseFloat(data.rsi);
+                const rsiColor = rsi > 70 ? '#ef4444' : (rsi < 30 ? '#10b981' : 'white');
+                const macdStatus = parseFloat(data.macd_hist) > 0 ? 'Bullish Cross' : 'Bearish Cross';
+                const macdColor = parseFloat(data.macd_hist) > 0 ? '#10b981' : '#ef4444';
+
+                document.getElementById('m-tech-body').innerHTML = `
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <td style="padding: 15px 0;">Ichimoku Cloud</td>
+                        <td style="padding: 15px 0; color: white; text-align: right;"><span style="color: ${data.ichimoku_trend === 'Bullish' ? '#10b981' : '#f59e0b'}; font-weight: 700;">${data.ichimoku_trend || 'N/A'}</span></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <td style="padding: 15px 0;">RSI (14)</td>
+                        <td style="padding: 15px 0; color: ${rsiColor}; text-align: right; font-weight: 700;">${safeFix(data.rsi, 1)}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <td style="padding: 15px 0;">Volume Ratio</td>
+                        <td style="padding: 15px 0; color: ${parseFloat(data.volume_ratio) > 2 ? '#10b981' : 'white'}; text-align: right; font-weight: 700;">${safeFix(data.volume_ratio, 2)}x</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <td style="padding: 15px 0;">MACD</td>
+                        <td style="padding: 15px 0; color: ${macdColor}; text-align: right; font-weight: 700;">${macdStatus}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <td style="padding: 15px 0;">EMA 20/50</td>
+                        <td style="padding: 15px 0; color: white; text-align: right;">${safeFix(data.ema20)} / ${safeFix(data.ema50)}</td>
+                    </tr>
+                `;
+                document.getElementById('m-desc-tech').innerText = data.tech_desc || "";
+
+                // Conviction Details Breakdown
+                const cats = data.conviction_details?.categories || {};
+                const catOrder = [
+                    { id: 'technique', label: 'Technique', color: '#60a5fa' },
+                    { id: 'fondamentaux', label: 'Fondamentaux', color: '#10b981' },
+                    { id: 'finances', label: 'Finances', color: '#f59e0b' },
+                    { id: 'news', label: 'News', color: '#a855f7' },
+                    { id: 'reseaux', label: 'Réseaux', color: '#ec4899' }
+                ];
+
+                let convHtml = '';
+                catOrder.forEach(cat => {
+                    const stars = cats[cat.id]?.stars || 0;
+                    const explanation = cats[cat.id]?.explanation || 'En attente';
+                    const fillWidth = (stars / 4) * 100;
+
+                    convHtml += `
+                        <div style="margin-bottom: 10px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="font-weight: 700; color: white;">${cat.label}</span>
+                                <span style="color: #fbbf24;">${"⭐".repeat(stars)}</span>
+                            </div>
+                            <div style="height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; margin-bottom: 8px;">
+                                <div style="height: 100%; background: ${cat.color}; width: ${fillWidth}%"></div>
+                            </div>
+                            <div style="font-size: 0.85em; color: var(--text-secondary); font-style: italic;">${explanation}</div>
+                        </div>
+                    `;
+                });
+                document.getElementById('m-conviction-details-grid').innerHTML = convHtml;
+
+                // VERTICAL PRICE LADDER (CORRECTED LOGIC)
+                const fib = data.fibonacci || {};
+                const price = parseFloat(data.price) || 0;
+                let levels = [];
+
+                // Add Reference Points
+                if (fib.high_ref) levels.push({ name: 'Point Haut (Ref)', val: fib.high_ref });
+                if (fib.low_ref) levels.push({ name: 'Point Bas (Ref)', val: fib.low_ref });
+
+                // Add Retracements
+                if (fib.retracements) {
+                    Object.entries(fib.retracements).forEach(([k, v]) => {
+                        const labelNum = k.replace('fib_', '');
+                        const labelVal = parseFloat(labelNum) / 10;
+                        levels.push({ name: `Fib ${labelVal}%`, val: v });
+                    });
+                }
+
+                // Add Extensions
+                if (fib.extensions) {
+                    Object.entries(fib.extensions).forEach(([k, v]) => {
+                        const labelNum = k.replace('ext_', '');
+                        const labelVal = parseFloat(labelNum) / 10;
+                        levels.push({ name: `Ext ${labelVal}%`, val: v });
+                    });
+                }
+
+                // Add Current Price
+                levels.push({ name: 'PRIX ACTUEL', val: price, current: true });
+
+                // Add POC (Volume Profile) if available
+                if (data.poc) levels.push({ name: 'POC (Volume Profile)', val: parseFloat(data.poc) });
+
+                // Deduplicate and Sort
+                levels = levels.filter((v, i, a) => a.findIndex(t => (t.val === v.val && t.name === v.name)) === i);
+                levels.sort((a, b) => b.val - a.val);
+
+                let ladderHtml = '';
+                levels.forEach(l => {
+                    let typeClass = '';
+                    let labelSuffix = '';
+
+                    const lVal = parseFloat(l.val);
+
+                    if (l.current) {
+                        typeClass = 'current-price';
+                    } else if (lVal > price) {
+                        typeClass = 'resistance';
+                        labelSuffix = ' (Résistance)';
+                    } else {
+                        typeClass = 'support';
+                        labelSuffix = ' (Support)';
+                    }
+
+                    // Specific labels for high/low
+                    let finalName = l.name;
+                    if (l.name.includes('Point Haut')) labelSuffix = '';
+                    if (l.name.includes('Point Bas')) labelSuffix = '';
+
+                    ladderHtml += `<div class="fib-level ${typeClass}">
+                                    <span>${finalName}${labelSuffix}</span>
+                                    <span>${safeFix(l.val)} ${curr}</span>
+                                   </div>`;
+                });
+                document.getElementById('m-fib-ladder').innerHTML = ladderHtml;
+
+                // Conviction
+                document.getElementById('m-stars-avg').innerText = (data.conviction_details?.weighted_average || 0) + " / 4";
+
+                // News/Catalyst
+                const newsCont = document.getElementById('m-catalyst-container');
+                if (data.news && data.news.length > 0) {
+                    let html = '<ul style="list-style: none; padding: 0;">';
+                    data.news.slice(0, 3).forEach(n => {
+                        const titleTag = n.url
+                            ? `<a href="${n.url}" target="_blank" rel="noopener noreferrer" style="color: var(--accent-color); text-decoration: none; border-bottom: 1px dashed var(--accent-color);">${n.title}</a>`
+                            : n.title;
+
+                        html += `<li style="margin-bottom: 20px; border-bottom: 1px solid #232936; padding-bottom: 15px;">
+                                    <div style="font-weight: 700; color: white;">${titleTag}</div>
+                                    <div style="font-size: 0.9em; opacity: 0.7; margin-top: 5px;">${n.date}</div>
+                                 </li>`;
+                    });
+                    html += '</ul>';
+                    newsCont.innerHTML = html;
+                } else {
+                    newsCont.innerText = data.catalyst || "Aucune news majeure.";
+                }
+
+                // Switch Views ONLY AFTER parsing
+                document.getElementById('dashboard-page').style.display = 'none';
+                document.getElementById('details-page').style.display = 'block';
+                window.scrollTo(0, 0);
+
+                // Chart
+                if (data.chartLabels && data.chartPrices) {
+                    if (bigChart) bigChart.destroy();
+                    const ctx = document.getElementById('bigChart').getContext('2d');
+                    const grad = ctx.createLinearGradient(0, 0, 0, 400);
+                    grad.addColorStop(0, 'rgba(16, 185, 129, 0.2)');
+                    grad.addColorStop(1, 'rgba(16, 185, 129, 0)');
+
+                    bigChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: data.chartLabels,
+                            datasets: [{
+                                label: 'Price',
+                                data: data.chartPrices,
+                                borderColor: '#10b981',
+                                borderWidth: 4,
+                                backgroundColor: grad,
+                                fill: true,
+                                pointRadius: 0,
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { display: false } },
+                            scales: {
+                                x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { font: { size: 14 } } },
+                                y: { grid: { color: 'rgba(255,255,255,0.05)' }, position: 'right', ticks: { font: { size: 14 } } }
+                            }
+                        }
+                    });
+                }
+            } catch (err) {
+                console.error("Detailed view error:", err);
+                alert("Erreur lors de l'ouverture des détails. Vérifiez la console.");
+            }
+        };
+
+        window.closeDetails = function () {
+            document.getElementById('dashboard-page').style.display = 'block';
+            document.getElementById('details-page').style.display = 'none';
+            window.scrollTo(0, 0);
+        };
+    </script>
+</body>
+
+</html>
